@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('receiver_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->text('body');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
+
+            $table->index(['receiver_id', 'created_at']);
         });
     }
 
