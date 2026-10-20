@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Http\Requests\StoreMessageRequest;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
@@ -30,6 +31,8 @@ class MessageController extends Controller
         ]);
 
         $message->load('sender:id,name');
+
+        MessageSent::dispatch($message);
 
         return new MessageResource($message);
     }
