@@ -17,6 +17,9 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+/* It handles failed API responses. 
+If Laravel returns 401 Unauthorized and a token exists, 
+it removes the token from localStorage and notifies the app to clear the user's login state. */
 api.interceptors.response.use(
   (response) => response,
   (error) => {

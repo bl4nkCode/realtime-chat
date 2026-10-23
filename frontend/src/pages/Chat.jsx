@@ -4,10 +4,10 @@ export default function Chat() {
   const { user, logout } = useAuth()
 
   return (
-    <div>
-      <h1>Chat (real UI comes in Phase 8)</h1>
-      <p>Logged in as {user.name}</p>
-      <button onClick={logout}>Logout</button>
+    <div style={{ maxWidth: 600, margin: '40px auto' }}>
+      <h1>Hello, {user.name}</h1>
+      <button onClick={logout}>Log out</button>
+      <p>The global chat goes here in Phase 8.</p>
     </div>
   )
 }
