@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,4 +14,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/messages', [MessageController::class, 'index']);
     Route::post('/messages', [MessageController::class, 'store']);
+
+    Route::get('/conversations', [ConversationController::class, 'index']);
+    Route::get('/conversations/{user}/messages', [ConversationController::class, 'messages']);
+    Route::post('/conversations/{user}/messages', [ConversationController::class, 'store']);
+    Route::post('/conversations/{user}/read', [ConversationController::class, 'markRead']);
 });
