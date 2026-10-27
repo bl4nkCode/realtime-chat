@@ -1,18 +1,34 @@
-
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { useAuth } from "../context/useAuth";
 import { useChat } from "../context/useChat";
 import { searchUsers } from "../lib/conversations";
 
-const linkClass = ({ isActive }) =>
-  `side-item${isActive ? " active" : ""}`;
+const linkClass = ({ isActive }) => `side-item${isActive ? " active" : ""}`;
 
 function InitialAvatar({ name, className = "" }) {
+  const colors = [
+    "avatar-purple",
+    "avatar-blue",
+    "avatar-pink",
+    "avatar-teal",
+    "avatar-orange",
+  ];
+
   const initial = name?.trim()?.charAt(0)?.toUpperCase() || "?";
 
+  // Give each name a consistent avatar color.
+  const colorIndex =
+    Array.from(name || "").reduce(
+      (total, character) => total + character.charCodeAt(0),
+      0,
+    ) % colors.length;
+
   return (
-    <span className={`side-item-icon ${className}`} aria-hidden="true">
+    <span
+      className={`side-item-icon user-list-avatar ${colors[colorIndex]} ${className}`}
+      aria-hidden="true"
+    >
       {initial}
     </span>
   );
@@ -99,9 +115,7 @@ export default function Sidebar() {
             )}
 
             {resultsReady && results.users.length === 0 && (
-              <p className="sidebar-empty">
-                No users found. Try another name.
-              </p>
+              <p className="sidebar-empty">No users found. Try another name.</p>
             )}
 
             {resultsReady &&
@@ -163,9 +177,7 @@ export default function Sidebar() {
                   </div>
 
                   {conversation.unread_count > 0 && (
-                    <span className="badge">
-                      {conversation.unread_count}
-                    </span>
+                    <span className="badge">{conversation.unread_count}</span>
                   )}
                 </NavLink>
               );
