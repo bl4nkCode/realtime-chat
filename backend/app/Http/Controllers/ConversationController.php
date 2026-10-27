@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserTyping;
+use Illuminate\Http\Response;
 use App\Events\MessagesRead;
 use App\Events\PrivateMessageSent;
 use App\Http\Requests\StoreMessageRequest;
@@ -98,7 +100,7 @@ class ConversationController extends Controller
         return new MessageResource($message);
     }
 
-        public function markRead(Request $request, User $user): JsonResponse
+    public function markRead(Request $request, User $user): JsonResponse
     {
         $meId = $request->user()->id;
 
@@ -118,5 +120,14 @@ class ConversationController extends Controller
         MessagesRead::dispatch($meId, $user->id, $ids->all(), $readAt->toIso8601String());
 
         return response()->json(['marked' => $ids->count()]);
+    }
+
+    public function typing(Request $request, User $user): Response
+    {
+        abort_if($user->id === $request->user()->id, 422, 'You cannot message yourself.');
+
+        UserTyping::dispatch($request->user()->id, $request->user()->name, $user->id);
+
+        return response()->noContent();
     }
 }

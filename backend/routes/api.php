@@ -24,4 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
 
     Route::get('/users/{user}', [UserController::class, 'show']);
+
+    Route::post('/conversations/{user}/typing', [ConversationController::class, 'typing'])
+        ->middleware('throttle:60,1');
 });

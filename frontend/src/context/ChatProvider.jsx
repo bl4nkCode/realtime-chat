@@ -26,9 +26,11 @@ function mergeConversations(local, fetched) {
 export default function ChatProvider({ children }) {
   const { user } = useAuth()
   const [conversations, setConversations] = useState([])
+  const [status, setStatus] = useState('loading') // 'loading' | 'ready' | 'error'
   const activeChatRef = useRef(null) // id of the private chat currently open
   const messageHandlers = useRef(new Set())
   const readHandlers = useRef(new Set())
+  const typingHandlers = useRef(new Set())
 
   // Put a conversation at the top with a new last message.
   const upsert = useCallback((partner, lastMessage, incrementUnread = false) => {
@@ -47,8 +49,21 @@ export default function ChatProvider({ children }) {
     })
   }, [])
 
+  const loadConversations = useCallback(() => {
+    return fetchConversations()
+      .then((list) => {
+        setConversations((prev) => mergeConversations(prev, list))
+        setStatus('ready')
+      })
+      .catch(() => setStatus('error'))
+  }, [])
+
+  const retryConversations = useCallback(() => {
+    setStatus('loading')
+    loadConversations()
+  }, [loadConversations])
+
   useEffect(() => {
-    let cancelled = false
     const channelName = `chat.user.${user.id}`
 
     // 1. Subscribe first, so nothing is missed while the list loads.
@@ -70,24 +85,23 @@ export default function ChatProvider({ children }) {
         )
         readHandlers.current.forEach((handler) => handler(payload))
       })
+      .listen('.user.typing', (payload) => {
+        typingHandlers.current.forEach((handler) => handler(payload))
+      })
 
     // 2. Then load the list and merge it with anything that already arrived.
-    fetchConversations()
-      .then((list) => {
-        if (!cancelled) setConversations((prev) => mergeConversations(prev, list))
-      })
-      .catch(() => {})
+    loadConversations()
 
     return () => {
-      cancelled = true
       // Remove this run's listeners so a re-run (StrictMode) can't leave
       // duplicates attached to the shared channel.
       channel
         .stopListening('.private-message.sent')
         .stopListening('.messages.read')
+        .stopListening('.user.typing')
       echo.leave(channelName)
     }
-  }, [user.id, upsert])
+  }, [user.id, upsert, loadConversations])
 
   const setActiveChat = useCallback((userId) => {
     activeChatRef.current = userId
@@ -119,9 +133,36 @@ export default function ChatProvider({ children }) {
     }
   }, [])
 
+  const onTyping = useCallback((handler) => {
+    typingHandlers.current.add(handler)
+    return () => {
+      typingHandlers.current.delete(handler)
+    }
+  }, [])
+
   const value = useMemo(
-    () => ({ conversations, upsert, setActiveChat, markRead, onMessage, onRead }),
-    [conversations, upsert, setActiveChat, markRead, onMessage, onRead],
+    () => ({
+      conversations,
+      status,
+      retryConversations,
+      upsert,
+      setActiveChat,
+      markRead,
+      onMessage,
+      onRead,
+      onTyping,
+    }),
+    [
+      conversations,
+      status,
+      retryConversations,
+      upsert,
+      setActiveChat,
+      markRead,
+      onMessage,
+      onRead,
+      onTyping,
+    ],
   )
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>

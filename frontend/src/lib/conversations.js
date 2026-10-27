@@ -29,3 +29,7 @@ export async function fetchUser(userId) {
   const res = await api.get(`/users/${userId}`)
   return res.data.data
 }
+
+export async function sendTyping(userId) {
+  await api.post(`/conversations/${userId}/typing`)
+}
