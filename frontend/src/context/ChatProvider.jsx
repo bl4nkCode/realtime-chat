@@ -34,6 +34,10 @@ export default function ChatProvider({ children }) {
   const upsert = useCallback((partner, lastMessage, incrementUnread = false) => {
     setConversations((prev) => {
       const existing = prev.find((c) => c.user.id === partner.id)
+
+      // Same message delivered twice (or an older one): nothing to change.
+      if (existing && existing.last_message.id >= lastMessage.id) return prev
+
       const updated = {
         user: { id: partner.id, name: partner.name },
         last_message: lastMessage,
@@ -48,7 +52,7 @@ export default function ChatProvider({ children }) {
     const channelName = `chat.user.${user.id}`
 
     // 1. Subscribe first, so nothing is missed while the list loads.
-    echo
+    const channel = echo
       .private(channelName)
       .listen('.private-message.sent', (message) => {
         const partner = message.sender
@@ -76,6 +80,11 @@ export default function ChatProvider({ children }) {
 
     return () => {
       cancelled = true
+      // Remove this run's listeners so a re-run (StrictMode) can't leave
+      // duplicates attached to the shared channel.
+      channel
+        .stopListening('.private-message.sent')
+        .stopListening('.messages.read')
       echo.leave(channelName)
     }
   }, [user.id, upsert])

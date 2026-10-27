@@ -222,6 +222,19 @@ code {
   font-size: 14px;
 }
 
+.chat-receipt {
+  margin-left: auto;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.chat-typing {
+  min-height: 20px;
+  padding: 0 20px 6px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
 /* ---------- Layout and sidebar ---------- */
 .app-shell {
   display: flex;

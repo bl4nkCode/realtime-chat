@@ -24,3 +24,8 @@ export async function searchUsers(search) {
   const res = await api.get('/users', { params: { search } })
   return res.data.data
 }
+
+export async function fetchUser(userId) {
+  const res = await api.get(`/users/${userId}`)
+  return res.data.data
+}

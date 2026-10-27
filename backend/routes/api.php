@@ -22,4 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/conversations/{user}/read', [ConversationController::class, 'markRead']);
 
     Route::get('/users', [UserController::class, 'index']);
+
+    Route::get('/users/{user}', [UserController::class, 'show']);
 });

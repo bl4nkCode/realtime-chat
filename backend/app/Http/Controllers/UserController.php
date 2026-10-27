@@ -27,4 +27,11 @@ class UserController extends Controller
 
         return response()->json(['data' => $users]);
     }
+
+        public function show(User $user): JsonResponse
+    {
+        return response()->json([
+            'data' => ['id' => $user->id, 'name' => $user->name],
+        ]);
+    }
 }
