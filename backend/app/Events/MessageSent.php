@@ -4,11 +4,11 @@ namespace App\Events;
 
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PresenceChannel;
 
 class MessageSent implements ShouldBroadcastNow
 {
@@ -21,7 +21,7 @@ class MessageSent implements ShouldBroadcastNow
 
     public function broadcastOn(): array
     {
-        return [new Channel('chat.global')];
+        return [new PresenceChannel('chat.global')];
     }
 
     public function broadcastAs(): string

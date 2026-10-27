@@ -214,3 +214,9 @@ code {
 .chat-form input:focus {
   outline: 2px solid var(--accent-border);
 }
+
+.chat-online {
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}

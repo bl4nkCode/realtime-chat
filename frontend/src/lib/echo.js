@@ -1,7 +1,7 @@
 import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
+import api from './api'
 
-// Echo's Reverb broadcaster uses pusher-js underneath and expects it on window.
 window.Pusher = Pusher
 
 const scheme = import.meta.env.VITE_REVERB_SCHEME ?? 'http'
@@ -15,6 +15,19 @@ const echo = new Echo({
   wssPort: port,
   forceTLS: scheme === 'https',
   enabledTransports: ['ws', 'wss'],
+
+  // Custom authorizer: called whenever a private/presence channel is joined.
+  authorizer: (channel) => ({
+    authorize: (socketId, callback) => {
+      api
+        .post('/broadcasting/auth', {
+          socket_id: socketId,
+          channel_name: channel.name,
+        })
+        .then((res) => callback(null, res.data))
+        .catch((err) => callback(err, null))
+    },
+  }),
 })
 
 export default echo
