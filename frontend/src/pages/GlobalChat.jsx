@@ -131,7 +131,18 @@ export default function GlobalChat() {
   return (
     <div className="chat">
       <header className="chat-header">
-        <h2>Global chat</h2>
+        <div className="chat-heading">
+          <div className="chat-heading-icon">#</div>
+          <div>
+            <h2>Global chat</h2>
+            <p>Hang out and chat with everyone</p>
+          </div>
+        </div>
+
+        <div className="chat-header-status">
+          <span className="status-dot" />
+          {online.length} online
+        </div>
       </header>
 
       <div className="chat-online">

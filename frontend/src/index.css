@@ -844,3 +844,152 @@ h3 {
     display: none;
   }
 }
+
+
+/* ---------- Refined Midnight chat header ---------- */
+
+.chat-header {
+  min-height: 78px;
+  padding: 16px 26px;
+  gap: 16px;
+}
+
+.chat-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.chat-heading-icon {
+  display: grid;
+  width: 39px;
+  height: 39px;
+  flex: 0 0 39px;
+  place-items: center;
+  border: 1px solid rgba(139, 124, 255, 0.25);
+  border-radius: 11px;
+  background: rgba(139, 124, 255, 0.12);
+  color: #a99cff;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.chat-heading-icon.direct-icon {
+  border-radius: 12px;
+  background: linear-gradient(145deg, #6558a8, #39334f);
+  color: #eeeaff;
+  font-size: 14px;
+}
+
+.chat-heading h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 750;
+  letter-spacing: -0.2px;
+}
+
+.chat-heading h2::before {
+  content: none;
+}
+
+.chat-heading p {
+  margin: 3px 0 0;
+  color: #85869c;
+  font-size: 11px;
+}
+
+.chat-header-status {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  flex-shrink: 0;
+  color: #a6a7bb;
+  font-size: 11px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px rgba(85, 214, 158, 0.3);
+}
+
+/* Keep separate bubbles, but reduce excessive vertical gaps */
+
+.chat-messages {
+  gap: 12px;
+  padding: 24px 26px;
+}
+
+.chat-message {
+  max-width: min(76%, 620px);
+  padding: 11px 14px;
+}
+
+.chat-meta {
+  gap: 7px;
+  margin-bottom: 4px;
+}
+
+.chat-message p {
+  line-height: 1.6;
+}
+
+/* Give the online-user row a cleaner appearance */
+
+.chat-online {
+  min-height: 40px;
+  padding: 9px 26px;
+  line-height: 1.5;
+}
+
+/* Responsive header */
+
+@media (max-width: 760px) {
+  .chat-header {
+    padding: 14px 16px;
+  }
+
+  .chat-header-status {
+    font-size: 10px;
+  }
+
+  .chat-messages {
+    gap: 11px;
+    padding: 18px 16px;
+  }
+
+  .chat-online {
+    padding: 9px 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .chat-header-status {
+    max-width: 110px;
+    text-align: right;
+  }
+
+  .chat-heading {
+    gap: 9px;
+  }
+
+  .chat-heading-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .chat-heading p {
+    font-size: 10px;
+  }
+
+  .chat-message {
+    max-width: 94%;
+    padding: 10px 12px;
+  }
+}
